@@ -1,0 +1,1 @@
+{"qubit_count": 6, "circuit_depth": 10, "circuit_width": 6, "retention_lifespan": 2.302585092994046, "gate_density": 0.48333333333333334, "dual_gate_count": 6, "measurement_density": 0.6823907603703501, "size_factor": 3.367295829986474, "gate_count": 23, "entanglement_variance": 0.5074204062872372}
