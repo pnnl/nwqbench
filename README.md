@@ -37,6 +37,20 @@ This will iterate over all qasm files within the local directory, and generate t
 Certain gates are not supported in all languages. If a user wants to mitigate this, they can set the transpile function to have a set of gates, or use the SUPPORTED_GATES file.
 In this file, we describe a set of computationall complete gates that are used under the transpilation function in each NWQBench script.
 
+# Benchmarks Structure
+
+Within NWQBench, the benchmark suite is structured as follows. Each directory is named after a quantum routine, such as wstate or adder. Within each quantum routine directory, there is a python file named after the algorithm. This file generates the QASM code responsible for the algorithm, at a given number of qubits, and is stored under the QASM directory in the algorithm directory. To generate QSharp,Pyquil and Cirq code, the main.py python file is induced. This script will process the prior generated QASM code into the desired languages. 
+
+# Characterizing Benchmark Circuits 
+
+To generate the circuit characterizing metrics, OpenQASMetric.py is included in the package. The metrics described in  "QASMBench: A Low-level QASM Benchmark Suite for NISQ Evaluation and Simulation" are computed using this script.
+To compute these metrics, the following outline demonstrates the implementation:
+```python
+from OpenQASMetric import QASMetric
+# The QASM-String you want to evaluate can be loaded simply reading a QASM file and storing it as a string
+evaluation = QASMetric(QASM-String)
+metrics = evaluation.evaluate_qasm()
+```
 ## Citation format
 
 For research articles, please cite our paper:
