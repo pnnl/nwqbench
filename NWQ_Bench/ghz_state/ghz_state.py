@@ -32,8 +32,6 @@ qc.h(0)
 cx_chain(qc,n_qubits)
 qc.measure_all()
 
-qiskit.
-
 if not os.path.isdir("qasm"):
     os.mkdir("qasm")
 qasm_file = open("qasm/ghz_state_n" + str(n_qubits) + ".qasm","w")
