@@ -37,6 +37,37 @@ This will iterate over all qasm files within the local directory, and generate t
 Certain gates are not supported in all languages. If a user wants to mitigate this, they can set the transpile function to have a set of gates, or use the SUPPORTED_GATES file.
 In this file, we describe a set of computationall complete gates that are used under the transpilation function in each NWQBench script.
 
+# Generating Benchmarks with Docker
+
+Because NWQBench's dependencies are pinned to 2021-era releases (Python 3.9,
+qiskit 0.26, etc.), a Dockerfile is provided so you don't have to fight
+setup/build toolchain issues locally. Build the image from the repo root:
+
+```bash
+docker build -t nwqbench .
+```
+
+Then generate QASM for one benchmark at a given size, or all of them, writing
+output to a mounted `./output` directory:
+
+```bash
+docker run --rm -v "$(pwd)/output:/output" nwqbench bv 8
+docker run --rm -v "$(pwd)/output:/output" nwqbench all 8
+docker run --rm -v "$(pwd)/output:/output" nwqbench qnn_qf 4 3 2   # n k depth
+```
+
+The container runs `generate_benchmarks.py`, which invokes the matching
+`NWQ_Bench/<name>/<script>.py` generator and copies its `qasm/*.qasm` output
+into `/output/<name>/`. Notes:
+
+- `boolean_satisfaction`, `grover_search`, and `statevector_encoder` hardcode
+  their circuit size in the script itself and ignore the qubit argument.
+- `adder` interprets its argument as the number of bits per operand (must be
+  a multiple of 4), not the final qubit count.
+- The container only produces QASM; converting to Cirq/Q#/PyQuil via
+  `main.py` still requires `q-convert` (Node.js) and, for Q#, a .NET/IQ#
+  install, which are intentionally not part of this image.
+
 # Benchmarks Structure
 
 Within NWQBench, the benchmark suite is structured as follows. Each directory is named after a quantum routine, such as wstate or adder. Within each quantum routine directory, there is a python file named after the algorithm. This file generates the QASM code responsible for the algorithm, at a given number of qubits, and is stored under the QASM directory in the algorithm directory. To generate QSharp,Pyquil and Cirq code, the main.py python file is induced. This script will process the prior generated QASM code into the desired languages. 
